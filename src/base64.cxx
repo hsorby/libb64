@@ -19,17 +19,21 @@ void usage()
 {
     std::cerr<< \
         "base64: Encodes and Decodes files using base64\n" \
-        "Usage: base64 [-e|-d] [input] [output]\n" \
+        "Usage: base64 [-e|-d] [-n] [input] [output]\n" \
         "   Where [-e] will encode the input file into the output file,\n" \
         "         [-d] will decode the input file into the output file, and\n" \
+        "         [-n] will not use new lines when encoding the output, and\n" \
         "         [input] and [output] are the input and output files, respectively.\n";
 }
 // Function which prints the usage of this executable, plus a short message
 void usage(const std::string& message)
 {
     usage();
-    std::cerr<<"Incorrect invocation of base64:\n";
-    std::cerr<<message<<std::endl;
+    std::cerr<<"Incorrect invocation of base64:"<<std::endl;
+    if (!message.empty())
+    {
+        std::cerr<<message<<std::endl;
+    }
 }
 
 int main(int argc, char** argv)
@@ -40,14 +44,41 @@ int main(int argc, char** argv)
         usage();
         exit(-1);
     }
-    if (argc != 4)
+    if (argc < 4 || argc > 5)
     {
         usage("Wrong number of arguments!");
         exit(-1);
     }
 
+    int argindex = 1;
+    int choiceargindex = 1;
+    int inputargindex = -1;
+    int outputargindex = -1;
+    bool newline = false;
+    while (argindex < argc)
+    {
+        std::string arg = argv[argindex];
+        if (arg[0] == '-' && arg.size() > 1)
+        {
+            switch (arg[1])
+            {
+            case 'e': choiceargindex = argindex; break;
+            case 'd': choiceargindex = argindex; break;
+            case 'n': newline = true; break;
+            default:
+                usage("Unknown option specified!");
+                exit(-1);
+            }
+        } else if (inputargindex == -1) {
+            inputargindex = argindex;
+        } else if (outputargindex == -1) {
+            outputargindex = argindex;
+        }
+        argindex++;
+    }
+
     // So far so good; try to open the input file
-    std::string input = argv[2];
+    std::string input = argv[inputargindex];
     // Note that we have to open the input in binary mode.
     // This is due to some operating systems not using binary mode by default.
     // Since we will most likely be dealing with binary files when encoding, we
@@ -60,7 +91,7 @@ int main(int argc, char** argv)
     }
 
     // Now try to open the output file
-    std::string output = argv[3];
+    std::string output = argv[outputargindex];
     // Again, note that we have to open the ouput in binary mode.
     // Similiarly, we will most likely need to deal with zeros in the output stream when we
     // are decoding, and the output stream has to be able to use these invalid text chars.
@@ -72,7 +103,7 @@ int main(int argc, char** argv)
     }
 
     // determine whether we need to encode or decode:
-    std::string choice = argv[1];
+    std::string choice = argv[choiceargindex];
     if (choice == "-d")
     {
         base64::decoder D;
@@ -81,6 +112,10 @@ int main(int argc, char** argv)
     else if (choice == "-e")
     {
         base64::encoder E;
+        if (newline)
+        {
+            E._charsperline = -1;
+        }
         E.encode(instream, outstream);
     }
     else

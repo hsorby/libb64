@@ -21,9 +21,11 @@ namespace base64
     {
         base64_encodestate _state;
         int _buffersize;
+        int _charsperline;
 
-        encoder(int buffersize_in = BUFFERSIZE)
+        encoder(int buffersize_in = BUFFERSIZE, int charsperline_in = 72)
         : _buffersize(buffersize_in)
+        , _charsperline(charsperline_in)
         {}
 
         int encode(char value_in)
@@ -44,6 +46,8 @@ namespace base64
         void encode(std::istream& istream_in, std::ostream& ostream_in)
         {
             base64_init_encodestate(&_state);
+            _state.charsperline = _charsperline;
+
             //
             const int N = _buffersize;
             char* plaintext = new char[N];

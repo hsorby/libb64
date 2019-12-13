@@ -7,6 +7,7 @@ project(${PROJECT_NAME} VERSION 1.2.2 LANGUAGES C CXX)
 get_property(IS_MULTI_CONFIG GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
 
 set(BASE64_BUFFERSIZE "16777216" CACHE STRING "Select a buffersize a larger size should be faster, but takes more runtime memory. e.g. 4096, 65536, 16777216")
+set(BASE64_CHARSPERLINE "72" CACHE STRING "Select a chars per line value. e.g. 72, 80, -1 for no new lines.")
 
 set(_PARAM_ANNOTATION "Install path prefix, prepended onto install directories.")
 set(BASE64_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX} CACHE PATH ${_PARAM_ANNOTATION})

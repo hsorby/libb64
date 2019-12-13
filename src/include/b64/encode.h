@@ -8,6 +8,7 @@ For details, see http://sourceforge.net/projects/libb64
 #ifndef BASE64_ENCODE_H
 #define BASE64_ENCODE_H
 
+#include <algorithm>
 #include <iostream>
 
 namespace base64
@@ -23,7 +24,7 @@ namespace base64
         int _buffersize;
         int _charsperline;
 
-        encoder(int buffersize_in = BUFFERSIZE, int charsperline_in = 72)
+        encoder(int buffersize_in = BUFFERSIZE, int charsperline_in = CHARSPERLINE)
         : _buffersize(buffersize_in)
         , _charsperline(charsperline_in)
         {}

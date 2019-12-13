@@ -7,7 +7,7 @@ For details, see http://sourceforge.net/projects/libb64
 
 #include <b64/cencode.h>
 
-const int CHARS_PER_LINE = 72;
+static const int CHARS_PER_LINE = CHARSPERLINE;
 
 void base64_init_encodestate(base64_encodestate* state_in)
 {

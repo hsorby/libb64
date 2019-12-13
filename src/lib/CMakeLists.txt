@@ -11,12 +11,12 @@ set(LIB_HDRS
   ../include/b64/encode.h
   )
 
-add_library(b64 ${LIB_SRCS} ${LIB_HDRS})
+add_library(b64 STATIC ${LIB_SRCS} ${LIB_HDRS})
 target_include_directories(b64 PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
   $<INSTALL_INTERFACE:include>
   )
-target_compile_definitions(b64 PUBLIC BUFFERSIZE=${BASE64_BUFFERSIZE})
+target_compile_definitions(b64 PUBLIC BUFFERSIZE=${BASE64_BUFFERSIZE} CHARSPERLINE=${BASE64_CHARSPERLINE})
 
 install(TARGETS b64 EXPORT base64-targets
   COMPONENT runtime
@@ -29,4 +29,4 @@ install(FILES
   ${LIB_HDRS}
   DESTINATION include/b64
   COMPONENT development
-)
+  )
